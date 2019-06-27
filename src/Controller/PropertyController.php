@@ -3,9 +3,13 @@
 namespace  App\Controller;
 
 use App\Entity\Property;
-use App\Repository\PropertyRepository;
-use Doctrine\Common\Persistence\ObjectManager;
+use App\Entity\PropertySearch;
+use App\Form\PropertySearchType;
 
+use App\Repository\PropertyRepository;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,32 +34,29 @@ class PropertyController extends AbstractController
      * @return Response
      */
 
-    public function index(): Response
+    public function index(PaginatorInterface $paginator, Request $request ): Response
     {
-        // CRRER le demarage ds BD
-        // $property = new  Property();
-        // $property->setTitle('Mon premier titre')
-        //             ->setPrice(200000)
-        //             ->setRooms(4)
-        //             ->setBedrooms(3)
-        //             ->setDescription(' test desc')
-        //             ->setSurface(60)
-        //             ->setFloor(2)
-        //             ->setHeat(1)
-        //             ->setCity('Paris')
-        //             ->setAddress('1 rue de la paix')
-        //             ->setPostalCode('75001');
-                    
-        // $em = $this->getDoctrine()->getManager();
-        // $em->persist($property);
-        // $em->flush();
+        // --- Ceer une recherche
+        // creer une entite representant la recherche : 
+        // creer un Form
+        // gerer le traitement ds le controlleur
 
-        //$property = $this->repository->findAllVisible();
-        //dump($property);
-        //$property[0]->setSold(true);
-        
+        $search  = new PropertySearch();
+        $form = $this->createForm( PropertySearchType::class, $search);
+        $form->handleRequest($request);
+
+      
+// Pagination
+        $properties = $paginator->paginate(
+            $this->repository->findAllVisibleQuery($search),
+            $request->query->getInt('page', 1),
+            12
+        // avec le paginator
+        );
         return $this->render( 'property/index.html.twig', [
-            'current_menu' => 'properties'
+            'current_menu' => 'properties',
+            'properties' => $properties,
+            'form' => $form->createView()
         ]);
     }
 
@@ -83,3 +84,27 @@ class PropertyController extends AbstractController
     }
 
 }
+
+
+// CRRER le demarage ds BD
+        // $property = new  Property();
+        // $property->setTitle('Mon premier titre')
+        //             ->setPrice(200000)
+        //             ->setRooms(4)
+        //             ->setBedrooms(3)
+        //             ->setDescription(' test desc')
+        //             ->setSurface(60)
+        //             ->setFloor(2)
+        //             ->setHeat(1)
+        //             ->setCity('Paris')
+        //             ->setAddress('1 rue de la paix')
+        //             ->setPostalCode('75001');
+                    
+        // $em = $this->getDoctrine()->getManager();
+        // $em->persist($property);
+        // $em->flush();
+
+        //$property = $this->repository->findAllVisible();
+        //dump($property);
+        //$property[0]->setSold(true);
+        //$properties = $this->repository->findAllVisible();
