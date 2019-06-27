@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
-
 class AdminPropertyController extends AbstractController
 {
 
@@ -72,7 +71,10 @@ class AdminPropertyController extends AbstractController
      */
     public function edit(Property $property, Request $request)
     {
-       
+       // image control cache
+    //    if($property->getImageFile() instanceof UploadedFile){
+    //     $cachemanager->remove($helper->asset($property,'imageFile'));
+    //    }
         // ajout TAGs
         // $option = new Option();
         // $property->addOption($option);
