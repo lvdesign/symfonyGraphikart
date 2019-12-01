@@ -19,6 +19,8 @@ class PropertySearch
     */
     private $minSurface;
 
+
+
      /**
     * @var ArrayCollection
     * 
@@ -30,6 +32,8 @@ class PropertySearch
         $this->options = new ArrayCollection();
     }
 
+
+    
     /**
      * @return int|null
      */

@@ -20,7 +20,7 @@ class PropertySearchType extends AbstractType
                 'required' => false,
                 'label' => false,
                 'attr' => [
-                    'placeholder'=>'budget max'
+                    'placeholder'=>'Budget max'
                 ]
             ])
             ->add('minSurface', IntegerType::class,[

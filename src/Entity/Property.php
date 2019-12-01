@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Image;
-
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -17,6 +16,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PropertyRepository")
  * @Vich\Uploadable()
+ * 
  */
 class Property
 {
@@ -36,6 +36,8 @@ class Property
 
 
     /**
+     * Validation Image  Chargement image
+     * 
      * @Assert\Image(
      *  mimeTypes="image/jpeg"
      * )
@@ -54,6 +56,8 @@ class Property
 
 
     /**
+     * Validation Length Title
+     * 
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min=8, max=25)
      */
@@ -67,6 +71,8 @@ class Property
     private $description;
 
     /**
+     * Validation Range Surface
+     * 
      * @ORM\Column(type="integer")
      * @Assert\Range(min=10, max=400)
      */
@@ -93,8 +99,8 @@ class Property
     private $price;
 
     /**
-     * @ORM\Column(type="integer")
-     */
+    * @ORM\Column(type="integer")
+    */
     private $heat;
 
     /**
@@ -108,6 +114,8 @@ class Property
     private $address;
 
     /**
+     *  Validation Regex Code Postal
+     * 
      * @ORM\Column(type="string", length=255)
      * @Assert\Regex("/^[0-9]{5}+/")
      */
@@ -128,6 +136,8 @@ class Property
 
 
     /**
+     * Relation avec Option
+     * 
      * @ORM\ManyToMany(targetEntity="App\Entity\Option", inversedBy="properties")
      */
     private $options;
@@ -161,9 +171,11 @@ class Property
         return $this;
     }
 
+    /**
+     *  "cocur/slugify": "^3.2",
+     */
     public function getSlug(): string
-    {
-       
+    {       
         return $slugify = (new Slugify() )->slugify($this->title);
     }
 
@@ -342,6 +354,9 @@ class Property
         return $this;
     }
 
+
+
+    
     /**
      * @return Collection|Option[]
      */
@@ -371,7 +386,7 @@ class Property
     }
 
 
-// ImageLoad get set
+    // ImageLoad get set
 
      /**
      * @return null|string

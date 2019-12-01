@@ -2,13 +2,13 @@
 namespace App\Listener;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 
+/* Live event cycle de Doctrine */
 class ImageCacheSubscriber implements EventSubscriber
 {
     
@@ -43,11 +43,8 @@ class ImageCacheSubscriber implements EventSubscriber
     public function preRemove(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
-
-        if($entity instanceof Property) { return ;} 
-       
+        if($entity instanceof Property) { return ;}        
             $this->cacheManager->remove($this->uploaderHelper->asset($entity, 'imageFile'));
-
     }
 
     public function preUpdate(PreUpdateEventArgs $args)
@@ -58,7 +55,6 @@ class ImageCacheSubscriber implements EventSubscriber
         // dump($args->getObject());
 
         if($entity instanceof Property) { return ;} 
-
         if($entity->getImageFile() instanceof UploadedFile )        
         {
             $this->cacheManager->remove($this->uploaderHelper->asset($entity, 'imageFile'));

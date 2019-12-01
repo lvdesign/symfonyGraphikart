@@ -27,6 +27,8 @@ class AdminPropertyController extends AbstractController
 
 
     /**
+     * Voir tous les Biens toto toto
+     * 
      * @Route("/admin", name="admin.property.index")
      * @param Property $property
      * @return \Symfony\Component\HttpFoundation\Response
@@ -37,7 +39,11 @@ class AdminPropertyController extends AbstractController
         return $this->render('admin/property/index.html.twig',compact('properties'));
     }
 
-      /**
+
+
+    /**
+     * Creer un Bien
+     * 
      * @Route("/admin/property/create", name="admin.property.new")
      * @param Property $property
      * @return \Symfony\Component\HttpFoundation\Response
@@ -63,12 +69,14 @@ class AdminPropertyController extends AbstractController
     }
     
 
-     /**
-     * @Route("/admin/property/{id}", name="admin.property.edit", methods="GET|POST")
-     * @param Property $property
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
+    /**
+    *  Update un Bien
+    *
+    * @Route("/admin/property/{id}", name="admin.property.edit", methods="GET|POST")
+    * @param Property $property
+    * @param Request $request
+    * @return \Symfony\Component\HttpFoundation\Response
+    */
     public function edit(Property $property, Request $request)
     {
        // image control cache
@@ -79,14 +87,13 @@ class AdminPropertyController extends AbstractController
         // $option = new Option();
         // $property->addOption($option);
        
-        $form= $this->createForm(PropertyType::class,$property);
+        $form= $this->createForm(PropertyType::class, $property);
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
-            
+        if($form->isSubmitted() && $form->isValid()) {            
             $this->em->flush();
-            $this->addFlash('success', 'Bien modifie avec succes!');
+            $this->addFlash('success', 'Bien modifié avec succès!');
             return $this->redirectToRoute('admin.property.index');
         }
 
@@ -97,6 +104,8 @@ class AdminPropertyController extends AbstractController
     }
 
     /**
+     *  Delete un bien
+     * 
      * @Route("/admin/property/{id}", name="admin.property.delete", methods="DELETE")
      * @param Property $property
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -107,8 +116,7 @@ class AdminPropertyController extends AbstractController
             $this->em->remove($property);
             $this->em->flush(); 
             $this->addFlash('success', 'Bien supprimé avec succes!');
-        }      
-        
+        }     
         return $this->redirectToRoute('admin.property.index');
     }
 

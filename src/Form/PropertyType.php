@@ -51,7 +51,9 @@ class PropertyType extends AbstractType
         ]);
     }
 
-    // recuper valeur de heat en inverse
+    // recuper valeur de Heat en inverse
+    // car  Heat est constuit : 0 => 'Electrique',
+    // https://symfony.com/doc/current/reference/forms/types/text.html
     private function getChoices(){
         $choices = Property::HEAT;
         $ouput= [];

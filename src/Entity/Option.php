@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ *  Many to Many avec properties associe a Property.php
  * @ORM\Entity(repositoryClass="App\Repository\OptionRepository")
  * @ORM\Table(name="`Option`")
  */
@@ -51,6 +52,11 @@ class Option
         return $this;
     }
 
+
+
+
+
+    
     /**
      * @return Collection|Property[]
      */

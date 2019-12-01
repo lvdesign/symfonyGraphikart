@@ -57,11 +57,15 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    // methode Interface  User
+
+
+
+    // methode Interface User
     public function getRoles()
     {
         return [ 'ROLE_ADMIN'];
     }
+
 
     public function getSalt()
     {
@@ -73,6 +77,7 @@ class User implements UserInterface, \Serializable
     public function eraseCredentials()
     {
     }
+
 
 
     /** @see \Serializable::serialize() */

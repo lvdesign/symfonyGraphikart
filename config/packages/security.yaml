@@ -18,7 +18,6 @@ security:
                 target: /
 
             # http_basic: true
-
             form_login: 
                 check_path: login
 

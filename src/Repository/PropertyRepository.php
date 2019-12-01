@@ -25,6 +25,7 @@ class PropertyRepository extends ServiceEntityRepository
    
 
     /**
+     * Trouver toutes les requetes et base pour Search 
      * @return Query
      */
     public function findAllVisibleQuery(PropertySearch $search): Query
@@ -68,6 +69,7 @@ class PropertyRepository extends ServiceEntityRepository
     }
 
     /**
+     * Dernières Proprietés (reglé à  4)
      * @return Property[]
      */
     public function findLatest(): array

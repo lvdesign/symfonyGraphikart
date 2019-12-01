@@ -11,7 +11,7 @@
     <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <a class="navbar-brand" href="{{ path('home') }} ">Mon Agence</a>
+  <a class="navbar-brand" href="{{ path('home') }} ">Mon Agence Toto</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -24,7 +24,9 @@
       </li>
     </ul> 
     {% if app.user %} 
+    
       <ul class="navbar-nav">
+      <p class="navbar-text">[ {{ app.user.username }} ]</p>
         <li class="nav-item">
           <a href="{{ path('logout')}}" class="nav-link" > Se deconnecter </a>
         </li>

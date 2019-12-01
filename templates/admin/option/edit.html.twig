@@ -4,15 +4,12 @@
 
 
 {% block body %}
-<div class="container mt-4">
-    <h1>Editer l'option avec _form</h1>
-
-    {{ include('admin/option/_form.html.twig', {form: form, button: 'Editer' }) }}
-
-</div>
-
-
+    <div class="container mt-4">
+        <h1>Editer l'option avec _form</h1>
+            {{ include('admin/option/_form.html.twig', {form: form, button: 'Editer' }) }}
+    </div>
 {% endblock body %}
+
 {% block stylesheets %}
 {% endblock stylesheets %}
 

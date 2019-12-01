@@ -6,6 +6,21 @@
 <div class="jumbotron">
 
     <div class="container">
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+          {{ message }}
+        </div>
+      {% endfor %}
+
+      {% if not form.vars.valid %}
+        <div class="alert alert-danger">
+          Erreur de mail
+        </div>
+      {% endif %}
+
+
+
                <div class="row">
                     <div class="col-md-8">
                      {%  if property.filename %}
@@ -13,13 +28,30 @@
     {% else %}
     <img src="{{'images/properties/empty.jpg' | imagine_filter('medium') }} "   alt="{{ property.title }}" class="card-img-top"/>
     {%  endif  %}
-                    </div>
+            </div>
         
                 <div class="col-md-4">
                     <h1>{{ property.title}}</h1>
-                    <h2>{{ property.rooms}} pieces -  {{ property.surface}} m2</h2>
+                    <h2>{{ property.rooms}} pieces -  {{ property.surface}} m²</h2>
                     <div class="text-primary">{{ property.formattedPrice}} €</div>
-                    <a href="#" class="btn btn-primary">Contactez l'agence</a> 
+
+                    <a href="#" class="btn btn-primary">Contactez l'agence</a>
+                    <div id="contactForm" class="mt-4">
+                        {{ form_start(form) }}
+                            <div class="row">
+                                <div class="col">{{ form_row(form.firstname) }}</div>
+                                <div class="col">{{ form_row(form.lastname) }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col">{{ form_row(form.phone) }}</div>
+                                <div class="col">{{ form_row(form.email) }}</div>
+                            </div>
+                        {{ form_rest(form) }}
+                            <div class="form-group">
+                            <button class="btn btn-primary">Envoyer</button>
+                            </div>
+                        {{ form_end(form) }}
+                    </div> 
                 </div>
        </div>
    
@@ -31,17 +63,15 @@
  
         <p>Une petite description {{ property.description | nl2br }} </p>
 
-
         <div class="row">
 
             <div class="col-md-8">
-            <h2>Caracteristiques</h2>
+            <h2>Caractéristiques</h2>
                <table class="table table-striped">
                     <tr>
                         <td> Surface</td>
                         <td>{{ property.surface}} m2</td>
                     </tr>
-
                      <tr>
                         <td> nb Pieces</td>
                         <td>{{ property.rooms}}</td>
@@ -57,28 +87,20 @@
                     <tr>
                         <td> Chauffage</td>
                         <td>{{ property.heatType}}</td>
-                    </tr>
-                    
+                    </tr>                    
                </table>
             </div>
 
             <div class="col-md-4">
-                   <h2>Specificités</h2>
+                   <h2>Spécificités</h2>
                    <ul class="list-group">
-
-                   {% for option in property.options %}
-                   <li>{{ option.name }}</li>
-
-                  
-                   {% endfor %}
+                        {% for option in property.options %}
+                            <li class="list-group-item">{{ option.name }}</li>                  
+                        {% endfor %}
                    </ul>
             </div>
        
-        </div>   
-
+        </div>  
  
 </div>
-        
-
-
 {% endblock body %}

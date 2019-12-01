@@ -2,34 +2,34 @@
 
 {% block title  'Agence toto home' %}
 
-{% block body %}
-<div class="jumbotron">
-    <h1>Agence</h1>
-    <p>Imaxime vel iduntia solut voluptae volorem aspienima plist, ommolorisque nonsequidit, omnis sinciis</p>
-</div>
+    {% block body %}
+    <div class="jumbotron text-center">
+        <h1>Agence Toto</h1>
+        <p>Imaxime vel iduntia solut voluptae volorem aspienima plist, ommolorisque nonsequidit, omnis sinciis</p>
+    </div>
 
 
-<div class="container">
-    
-    <h2>Les derniers liens</h2>
-        <div class="row flex">   
-           {% for property in properties %} 
-            <div class="col-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                        <a href="{{ path( 'property.show', { id: property.id, slug: property.slug })}}" >{{ property.title}}</a>
-                        </h5>
-                        <p class="card-text">{{ property.city}} {{ property.postalcode}}</p>
-                        <p class="card-text">{{ property.formattedPrice}} €</p>
-                    </div>        
-                </div>
-        </div>
+    <div class="container">
+        
+        <h2>Les derniers biens</h2>
+            <div class="row flex">   
+            {% for property in properties %} 
+                <div class="col-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{{ path( 'property.show', { id: property.id, slug: property.slug })}}" >{{ property.title}}</a>
+                            </h5>
+                            <p class="card-text">{{ property.city}} {{ property.postalcode}}</p>
+                            <p class="card-text">{{ property.formattedPrice}} €</p>
+                        </div>        
+                    </div>
+            </div>
 
-            {% endfor %}
-            
-    </div><!-- RowEnd -->
+                {% endfor %}
+                
+        </div><!-- RowEnd -->
 
-</div><!-- ContEnd -->
+    </div><!-- ContEnd -->
 
 {% endblock %}
