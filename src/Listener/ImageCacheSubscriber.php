@@ -43,7 +43,7 @@ class ImageCacheSubscriber implements EventSubscriber
     public function preRemove(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
-        if($entity instanceof Property) { return ;}        
+        if($entity instanceof Picture) { return ;}        
             $this->cacheManager->remove($this->uploaderHelper->asset($entity, 'imageFile'));
     }
 
@@ -54,7 +54,7 @@ class ImageCacheSubscriber implements EventSubscriber
         // dump($args->getEntity());
         // dump($args->getObject());
 
-        if($entity instanceof Property) { return ;} 
+        if($entity instanceof Picture) { return ;} 
         if($entity->getImageFile() instanceof UploadedFile )        
         {
             $this->cacheManager->remove($this->uploaderHelper->asset($entity, 'imageFile'));

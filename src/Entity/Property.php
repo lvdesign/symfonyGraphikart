@@ -2,31 +2,26 @@
 
 namespace App\Entity;
 
-use Cocur\Slugify\Slugify;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
-use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Image;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Cocur\Slugify\Slugify;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PropertyRepository")
- * @Vich\Uploadable()
- * 
+ * @UniqueEntity("title")
  */
 class Property
 {
-    
+
     const HEAT = [
         0 => 'Electrique',
         1 => 'Gaz',
-        2 => 'Fioul'
+        2 => 'fioul'
     ];
-    
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -34,36 +29,11 @@ class Property
      */
     private $id;
 
-
     /**
-     * Validation Image  Chargement image
-     * 
-     * @Assert\Image(
-     *  mimeTypes="image/jpeg"
-     * )
-     * @Vich\UploadableField(mapping="property_image", fileNameProperty="filename")
-     * @var File|null
-     */
-    private $imageFile;
-
-    /**
+     * @Assert\Length(min=5, max=255)
      * @ORM\Column(type="string", length=255)
-     * @var string|null
-     */
-    private $filename;
-
-
-
-
-    /**
-     * Validation Length Title
-     * 
-     * @ORM\Column(type="string", length=255)
-     * @Assert\Length(min=8, max=25)
      */
     private $title;
-
-    
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -71,8 +41,6 @@ class Property
     private $description;
 
     /**
-     * Validation Range Surface
-     * 
      * @ORM\Column(type="integer")
      * @Assert\Range(min=10, max=400)
      */
@@ -99,8 +67,8 @@ class Property
     private $price;
 
     /**
-    * @ORM\Column(type="integer")
-    */
+     * @ORM\Column(type="integer")
+     */
     private $heat;
 
     /**
@@ -114,17 +82,13 @@ class Property
     private $address;
 
     /**
-     *  Validation Regex Code Postal
-     * 
+     * @Assert\Regex("/^[0-9]{5}$/")
      * @ORM\Column(type="string", length=255)
-     * @Assert\Regex("/^[0-9]{5}+/")
      */
     private $postal_code;
 
-
-
     /**
-     * @ORM\Column(type="boolean", options={"defaults": false})
+     * @ORM\Column(type="boolean", options={"default": false})
      */
     private $sold = false;
 
@@ -133,11 +97,7 @@ class Property
      */
     private $created_at;
 
-
-
     /**
-     * Relation avec Option
-     * 
      * @ORM\ManyToMany(targetEntity="App\Entity\Option", inversedBy="properties")
      */
     private $options;
@@ -148,17 +108,38 @@ class Property
     private $updated_at;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Picture", mappedBy="property", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Picture", mappedBy="property", orphanRemoval=true, cascade={"persist"})
      */
-    private $pictures; // mappedBy TO inversedBy Car propietaire de l'action cf ORM Doctrine MtoM
+    private $pictures;
 
-   public function __construct()
-   {
-       $this->created_at = new \DateTime();
-       $this->options = new ArrayCollection();
-       $this->pictures = new ArrayCollection();
-       
-   }
+    /**
+     * @Assert\All({
+     *   @Assert\Image(
+     *     maxSize="1000k",
+     *     maxSizeMessage="Le fichier excède 1000Ko.",
+     *     mimeTypes={"image/png", "image/jpeg", "image/jpg", "image/gif"},
+     *     mimeTypesMessage= "formats autorisés: png, jpeg, jpg, gif"     * 
+     *     )
+     * })
+     */
+    private $pictureFiles;
+
+    /**
+     * @ORM\Column(type="float", scale=4, precision=6)
+     */
+    private $lat;
+
+    /**
+     * @ORM\Column(type="float", scale=4, precision=7)
+     */
+    private $lng;
+
+    public function __construct()
+    {
+        $this->created_at = new \DateTime();
+        $this->options = new ArrayCollection();
+        $this->pictures = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -177,14 +158,10 @@ class Property
         return $this;
     }
 
-    /**
-     *  "cocur/slugify": "^3.2",
-     */
     public function getSlug(): string
-    {       
-        return $slugify = (new Slugify() )->slugify($this->title);
+    {
+        return (new Slugify())->slugify($this->title);
     }
-
 
     public function getDescription(): ?string
     {
@@ -251,7 +228,6 @@ class Property
         return $this->price;
     }
 
-
     public function setPrice(int $price): self
     {
         $this->price = $price;
@@ -261,7 +237,7 @@ class Property
 
     public function getFormattedPrice(): string
     {
-        return number_format($this->price, 0,'',' ');
+        return number_format($this->price, 0, '', ' ');
     }
 
     public function getHeat(): ?int
@@ -276,15 +252,10 @@ class Property
         return $this;
     }
 
-
-
     public function getHeatType(): string
     {
         return self::HEAT[$this->heat];
     }
-
-
-
 
     public function getCity(): ?string
     {
@@ -322,8 +293,6 @@ class Property
         return $this;
     }
 
-    
-
     public function getSold(): ?bool
     {
         return $this->sold;
@@ -348,21 +317,6 @@ class Property
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updated_at): self
-    {
-        $this->updated_at = $updated_at;
-
-        return $this;
-    }
-
-
-
-    
     /**
      * @return Collection|Option[]
      */
@@ -391,47 +345,15 @@ class Property
         return $this;
     }
 
-
-    // ImageLoad get set
-
-     /**
-     * @return null|string
-     */
-    public function getFilename(): ?string
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
-        return $this->filename;
+        return $this->updated_at;
     }
 
-    /**
-     * @param null|string $filename
-     * @return Property
-     */
-    public function setFilename(?string $filename): Property
+    public function setUpdatedAt(\DateTimeInterface $updated_at): self
     {
-        $this->filename = $filename;
-        return $this;
-    }
+        $this->updated_at = $updated_at;
 
-   
-    /**
-     * @return null|File
-     */
-    public function getImageFile(): ?File
-    {
-        return $this->imageFile;
-    }
-
-    /**
-     * @param  null|File $imageFile
-     * @return Property
-     */
-
-    public function setImageFile(?File $imageFile): Property
-    {
-        $this->imageFile = $imageFile;
-        if( $this->imageFile instanceof UploadedFile ){
-            $this->updated_at = new \DateTime('now');
-        }
         return $this;
     }
 
@@ -441,6 +363,14 @@ class Property
     public function getPictures(): Collection
     {
         return $this->pictures;
+    }
+
+    public function getPicture(): ?Picture
+    {
+        if ($this->pictures->isEmpty()) {
+            return null;
+        }
+        return $this->pictures->first();
     }
 
     public function addPicture(Picture $picture): self
@@ -466,5 +396,53 @@ class Property
         return $this;
     }
 
-    
+    /**
+     * @return mixed
+     */
+    public function getPictureFiles()
+    {
+        return $this->pictureFiles;
+    }
+
+    /**
+     * @param mixed $pictureFiles
+     * @return Property
+     */
+    public function setPictureFiles($pictureFiles): self
+    {
+        foreach($pictureFiles as $pictureFile) {
+            $picture = new Picture();
+            $picture->setImageFile($pictureFile);
+            $this->addPicture($picture);
+        }
+        $this->pictureFiles = $pictureFiles;
+        return $this;
+    }
+
+    public function getLat(): ?float
+    {
+        return $this->lat;
+    }
+
+    public function setLat(float $lat): self
+    {
+        $this->lat = $lat;
+
+        return $this;
+    }
+
+    public function getLng(): ?float
+    {
+        return $this->lng;
+    }
+
+    public function setLng(float $lng): self
+    {
+        $this->lng = $lng;
+
+        return $this;
+    }
+
+
+
 }
