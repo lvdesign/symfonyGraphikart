@@ -145,12 +145,18 @@ class Property
     /**
      * @ORM\Column(type="datetime")
      */
-    private $updated_at; // mappedBy TO inversedBy Car propietaire de l'action cf ORM Doctrine MtoM
+    private $updated_at;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Picture", mappedBy="property", orphanRemoval=true)
+     */
+    private $pictures; // mappedBy TO inversedBy Car propietaire de l'action cf ORM Doctrine MtoM
 
    public function __construct()
    {
        $this->created_at = new \DateTime();
        $this->options = new ArrayCollection();
+       $this->pictures = new ArrayCollection();
        
    }
 
@@ -426,6 +432,37 @@ class Property
         if( $this->imageFile instanceof UploadedFile ){
             $this->updated_at = new \DateTime('now');
         }
+        return $this;
+    }
+
+    /**
+     * @return Collection|Picture[]
+     */
+    public function getPictures(): Collection
+    {
+        return $this->pictures;
+    }
+
+    public function addPicture(Picture $picture): self
+    {
+        if (!$this->pictures->contains($picture)) {
+            $this->pictures[] = $picture;
+            $picture->setProperty($this);
+        }
+
+        return $this;
+    }
+
+    public function removePicture(Picture $picture): self
+    {
+        if ($this->pictures->contains($picture)) {
+            $this->pictures->removeElement($picture);
+            // set the owning side to null (unless already changed)
+            if ($picture->getProperty() === $this) {
+                $picture->setProperty(null);
+            }
+        }
+
         return $this;
     }
 

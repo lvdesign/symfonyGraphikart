@@ -94,6 +94,10 @@ revenir en arriere
 php bin/console doctrine:migrations:migrate numberavant
 
 
+//https://symfony.com/doc/master/bundles/DoctrineMigrationsBundle/index.html
+php bin/console doctrine:migrations:diff
+php bin/console doctrine:migrations:execute --up 20191201194641
+
 ------------------------------------------------------
 ## composer ajouts
 
@@ -135,8 +139,15 @@ composer require liip/imagine-bundle
 - Bundle Swift Mailer
 test avec $ mailDev
 
+- Webpack par Symfony
+ NO----php composer.phar require symfony/webpack-encore-pack
+ NO----php composer.phar remove symfony/webpack-encore-pack
 
+ php composer.phar require encore
+ yarn install
 
+-lancement 
+npm run dev-server
 
 ______________________________________________________
 ## JS 
